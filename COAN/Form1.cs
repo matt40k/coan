@@ -1,64 +1,73 @@
 ﻿using System;
-using System.Windows.Forms;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using System.Net.Sockets;
+
 namespace COAN
 {
-    /// <summary>
-    /// The OpenTTD Admin Network Bot Framework
-    /// Extend this class and implement the methods you wish to make use of.
-    /// </summary>
-    public class OpenTTD
+    public partial class Form1 : Form
     {
-        public string botName = "Bot Name";
-        public string botVersion = "BOT VERSION";
-
-        public string adminHost = "";
-        public string adminPassword = "";
-        public int adminPort = 3978;
-
+        NetworkClient networkClient = new NetworkClient();
         public Dictionary<long, Client> clientPool = new Dictionary<long, Client>();
 
-        public NetworkClient networkClient;
-
-        public OpenTTD()
+        private void button1_Click(object sender, EventArgs e)
         {
-            this.networkClient = new NetworkClient(this);
+            networkClient.Connect(wTextHost.Text, Int32.Parse(wTextPort.Text), wTextPassword.Text);
+            networkClient.OnChat += new NetworkClient.onChat(networkClient_OnChat);
+            networkClient.OnServerWelcome += new NetworkClient.onWelcome(onServerWelcome);
         }
 
-        public string getPassword()
+        void networkClient_OnChat(enums.NetworkAction action, enums.DestType dest, long clientId, string message, long data)
         {
-            return this.adminPassword;
+            if (textBox2.InvokeRequired == true)
+            {
+                textBox2.Invoke(
+                    (MethodInvoker)delegate
+                    {
+                        textBox2.AppendText(Convert.ToString(clientPool[clientId].name));
+                        textBox2.AppendText(" said: " + message);
+                        textBox2.AppendText(Environment.NewLine);
+                    });
+            }
         }
 
-        public string getBotName()
+        public void Chat(string msg)
         {
-            return this.botName;
+            textBox2.AppendText("YOU said: " + msg);
+            textBox2.AppendText(Environment.NewLine);
+            networkClient.chatPublic(msg);
         }
 
-        public string getBotVersion()
+        private void button2_Click(object sender, EventArgs e)
         {
-            return this.botVersion;
+            Chat(textBox1.Text);
+            textBox1.Text = "";
         }
 
-        public void Connect(string hostname, int port, string password)
+        public Form1()
         {
-            this.adminHost = hostname;
-            this.adminPort = port;
-            this.adminPassword = password;
-            this.Connect();
+            InitializeComponent();
         }
 
-        public void Connect()
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
-            networkClient.Connect(this.adminHost, this.adminPort);
-            networkClient.Start();
+            if (e.KeyCode == Keys.Return)
+            {
+                button2_Click(sender, e);
+            }
         }
+
 
         public void registerUpdateFrequency(AdminUpdateType type, AdminUpdateFrequency freq)
         {
             networkClient.sendAdminUpdateFrequency(type, freq);
         }
-
+        
         public void pollAll()
         {
             networkClient.pollCmdNames();
@@ -68,14 +77,7 @@ namespace COAN
             networkClient.pollCompanyStats();
             networkClient.pollCompanyEconomy();
         }
-
-        public void chatPublic(string msg)
-        {
-            networkClient.sendAdminChat(enums.NetworkAction.NETWORK_ACTION_CHAT, enums.DestType.DESTTYPE_BROADCAST, 0, msg, 0);
-        }
-
-        public void onProtocol(Protocol protocol) { }
-
+        
         public void onServerWelcome()
         {
             /* register for console updates */
@@ -90,6 +92,5 @@ namespace COAN
             this.registerUpdateFrequency(AdminUpdateType.ADMIN_UPDATE_GAMESCRIPT, AdminUpdateFrequency.ADMIN_FREQUENCY_AUTOMATIC);
             pollAll();
         }
-
     }
 }

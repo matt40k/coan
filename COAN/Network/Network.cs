@@ -9,13 +9,8 @@ namespace COAN
 {
     public class Network
     {
-        OpenTTD openttd;
-
-        public Network(OpenTTD openttd)
+        public Network()
         {
-            this.openttd = openttd;
         }
-
-
     }
 }

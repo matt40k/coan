@@ -14,8 +14,10 @@ namespace COAN
         static NetworkInputThread()
         {
            queues = new Dictionary<Socket, BlockingCollection<Packet>>();
-           new System.Threading.Thread(run).Start();
-        }
+           System.Threading.Thread t = new System.Threading.Thread(run);
+           t.IsBackground = true;
+           t.Start();
+           }
 
         protected static BlockingCollection<Packet> getQueue(Socket socket)
         {

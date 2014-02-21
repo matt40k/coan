@@ -75,8 +75,6 @@
     <Compile Include="Network\NetworkClient.cs" />
     <Compile Include="Network\NetworkInputThread.cs" />
     <Compile Include="Network\NetworkOutputThread.cs" />
-    <Compile Include="OpenTTD.cs" />
-    <Compile Include="OThread.cs" />
     <Compile Include="Network\Packet.cs" />
     <Compile Include="Enums\PacketType.cs" />
     <Compile Include="Network\Program.cs" />

@@ -14,7 +14,9 @@ namespace COAN
         static NetworkOutputThread()
         {
            queues = new Dictionary<Socket, BlockingCollection<Packet>>();
-           new System.Threading.Thread(run).Start();
+           System.Threading.Thread t = new System.Threading.Thread(run);
+           t.IsBackground = true;
+           t.Start();
         }
 
 

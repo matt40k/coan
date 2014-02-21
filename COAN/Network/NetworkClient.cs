@@ -12,12 +12,30 @@ namespace COAN
     public class NetworkClient
     {
         private Protocol protocol;
-        private OpenTTD openttd;
         private Socket socket;
         private Thread mThread;
 
+        public string botName = "Bot Name";
+        public string botVersion = "BOT VERSION";
+
+        public string adminHost = "";
+        public string adminPassword = "";
+        public int adminPort = 3978;
+
         #region Delegates
+        /// <summary>
+        /// Fired when messages are recieved
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="dest"></param>
+        /// <param name="clientId">The ID of the Client who sent the message</param>
+        /// <param name="message">The actual chat message</param>
+        /// <param name="data"></param>
         public delegate void onChat(enums.NetworkAction action, enums.DestType dest, long clientId, string message, long data);
+        /// <summary>
+        /// Fired when Client information is received
+        /// </summary>
+        /// <param name="client">The Client information</param>
         public delegate void onClientInfo(Client client);
         public delegate void onProtocol(Protocol protocol);
         public delegate void onWelcome();
@@ -30,31 +48,62 @@ namespace COAN
         public event onWelcome OnServerWelcome;
         #endregion
 
-        public NetworkClient(OpenTTD openttd)
+        public NetworkClient()
         {
-            this.openttd = openttd;
             this.protocol = new Protocol();
             mThread = new Thread(() =>
             {
+                Thread.CurrentThread.IsBackground = true;
+
                 while (IsConnected() == true)
                     receive();
+
+                Thread.CurrentThread.Abort();
             });
+        }
+
+        public void Connect(string hostname, int port, string password)
+        {
+            this.adminHost = hostname;
+            this.adminPort = port;
+            this.adminPassword = password;
+            this.Connect();
+        }
+
+        public void Connect()
+        {
+            if (Connect(this.adminHost, this.adminPort) == true)
+                Start();
         }
 
         public bool Connect(string host, int port)
         {
-            if (getOpenTTD().getPassword().Length == 0)
+            if (adminPassword.Length == 0)
             {
                 MessageBox.Show("Can't connect with empty password");
                 return false;
             }
-            this.socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            this.socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
-            this.socket.Connect(host, port);
+            try
+            {
+                this.socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                this.socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
+                this.socket.Connect(host, port);
 
-            sendAdminJoin();
-
+                sendAdminJoin();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occurred while trying to connect to: " + host);
+                return false;
+            }
             return true;
+        }
+
+
+
+        public void chatPublic(string msg)
+        {
+            sendAdminChat(enums.NetworkAction.NETWORK_ACTION_CHAT, enums.DestType.DESTTYPE_BROADCAST, 0, msg, 0);
         }
 
         public Boolean IsConnected()
@@ -90,7 +139,7 @@ namespace COAN
 
             try
             {
-                method.Invoke(this, new object[] { getOpenTTD(), p });
+                method.Invoke(this, new object[] { p });
             }
             catch (NullReferenceException)
             {
@@ -144,9 +193,9 @@ namespace COAN
         {
             Packet p = new Packet(getSocket(), enums.PacketType.ADMIN_PACKET_ADMIN_JOIN);
 
-            p.WriteString(getOpenTTD().getPassword());
-            p.WriteString(getOpenTTD().getBotName());
-            p.WriteString(getOpenTTD().getBotVersion());
+            p.WriteString(adminPassword);
+            p.WriteString(botName);
+            p.WriteString(botVersion);
 
             NetworkOutputThread.append(p);
         }
@@ -202,7 +251,7 @@ namespace COAN
         #endregion
 
         #region Receive Packets
-        public void receiveServerClientInfo(OpenTTD openttd, Packet p)
+        public void receiveServerClientInfo(Packet p)
         {
             Client client = new Client(p.readUint32());
 
@@ -213,13 +262,13 @@ namespace COAN
             client.joindate = new GameDate(p.readUint32());
             client.companyId = p.readUint8();
 
-            openttd.clientPool.Add(client.clientId, client);
+            //openttd.clientPool.Add(client.clientId, client); THIS SHOULD BE IMPLEMENTED IN THE EVENT
 
             if (OnClientInfo != null)
                 OnClientInfo(client);
         }
 
-        public void receiveServerProtocol(OpenTTD openttd, Packet p)
+        public void receiveServerProtocol(Packet p)
         {
             Protocol protocol = getProtocol();
 
@@ -245,7 +294,7 @@ namespace COAN
                 OnProtocol(protocol);
         }
 
-        public void receiveServerWelcome(OpenTTD openttd, Packet p)
+        public void receiveServerWelcome(Packet p)
         {
             Map map = new Map();
             
@@ -269,7 +318,7 @@ namespace COAN
             
         }
 
-        public void receiveServerChat(OpenTTD openttd, Packet p)
+        public void receiveServerChat(Packet p)
         {
             NetworkAction action = (NetworkAction) p.readUint8();
             DestType dest = (DestType) p.readUint8();
@@ -282,29 +331,24 @@ namespace COAN
             
         }
 
-        public void receiveServerCmdNames(OpenTTD openttd, Packet p)
+        public void receiveServerCmdNames(Packet p)
         {
             while (p.readBool())
             {
                 int cmdId = p.readUint16();
                 String cmdName = p.readString();
-
-                DoCommandName.enumeration.Add(cmdName, cmdId);
+                if(DoCommandName.enumeration.ContainsKey(cmdName) == false)
+                    DoCommandName.enumeration.Add(cmdName, cmdId);
             }
         }
 
-        public void receiveServerCmdLogging(OpenTTD openttd, Packet p)
+        public void receiveServerCmdLogging(Packet p)
         {
 
         }
         #endregion
 
         #region Getters
-        public OpenTTD getOpenTTD()
-        {
-            return this.openttd;
-        }
-
         public Socket getSocket()
         {
             return this.socket;
