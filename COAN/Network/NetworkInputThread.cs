@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Collections.Concurrent;
 using System.Net.Sockets;
 
@@ -9,11 +6,11 @@ namespace COAN
 {
     class NetworkInputThread
     {
-        protected static Dictionary<Socket, BlockingCollection<Packet>> queues;
+        protected static ConcurrentDictionary<Socket, BlockingCollection<Packet>> queues;
 
         static NetworkInputThread()
         {
-           queues = new Dictionary<Socket, BlockingCollection<Packet>>();
+           queues = new ConcurrentDictionary<Socket, BlockingCollection<Packet>>();
            System.Threading.Thread t = new System.Threading.Thread(run);
            t.IsBackground = true;
            t.Start();
@@ -23,7 +20,7 @@ namespace COAN
         {
             if (queues.ContainsKey(socket) == false)
             {
-                queues.Add(socket, new BlockingCollection<Packet>(100));
+                queues.TryAdd(socket, new BlockingCollection<Packet>(100));
             }
             return queues[socket];
         }
@@ -52,7 +49,7 @@ namespace COAN
                     {
                         if (socket.Connected == false)
                         {
-                            queues.Remove(socket);
+                            queues.TryRemove(socket, out _);
                             //log.info("Socket closed: {}", socket.getRemoteSocketAddress().toString());
                             continue;
                         }
