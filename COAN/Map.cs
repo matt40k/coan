@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace COAN
+﻿namespace COAN
 {
     class Map
     {
-        public String name;
+        public string name;
         public Landscape landscape;
         public GameDate dateStart;
         public GameDate dateCurrent;

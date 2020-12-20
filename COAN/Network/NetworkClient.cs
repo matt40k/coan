@@ -89,7 +89,8 @@ namespace COAN
             }
             catch (Exception ex)
             {
-                MessageBox.Show("An error occurred while trying to connect to: " + host);
+                var errorMessage = string.Format("An error occurred while trying to connect to: {0} - Error message: {1)", host, ex.Message);
+                MessageBox.Show(errorMessage);
                 return false;
             }
             return true;

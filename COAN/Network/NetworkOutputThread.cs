@@ -59,7 +59,7 @@ namespace COAN
                         p.Send();
                         //log.trace("Sending Packet {}", p.getType());
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         //log.error(null, ex);
                     }
