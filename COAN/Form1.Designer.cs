@@ -33,14 +33,14 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.wTextPassword = new System.Windows.Forms.TextBox();
+            this.wTextPort = new System.Windows.Forms.TextBox();
+            this.wTextHost = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.button2 = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.wTextHost = new System.Windows.Forms.TextBox();
-            this.wTextPort = new System.Windows.Forms.TextBox();
-            this.wTextPassword = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -102,6 +102,60 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Connection Settings";
             // 
+            // wTextPassword
+            // 
+            this.wTextPassword.Location = new System.Drawing.Point(194, 145);
+            this.wTextPassword.Name = "wTextPassword";
+            this.wTextPassword.PasswordChar = '*';
+            this.wTextPassword.Size = new System.Drawing.Size(245, 22);
+            this.wTextPassword.TabIndex = 6;
+            // 
+            // wTextPort
+            // 
+            this.wTextPort.Location = new System.Drawing.Point(194, 100);
+            this.wTextPort.Name = "wTextPort";
+            this.wTextPort.Size = new System.Drawing.Size(117, 22);
+            this.wTextPort.TabIndex = 5;
+            this.wTextPort.Text = "3977";
+            // 
+            // wTextHost
+            // 
+            this.wTextHost.CharacterCasing = System.Windows.Forms.CharacterCasing.Lower;
+            this.wTextHost.Location = new System.Drawing.Point(194, 60);
+            this.wTextHost.Name = "wTextHost";
+            this.wTextHost.Size = new System.Drawing.Size(245, 22);
+            this.wTextHost.TabIndex = 4;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(13, 144);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(135, 20);
+            this.label3.TabIndex = 3;
+            this.label3.Text = "Admin Password";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(49, 99);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(92, 20);
+            this.label2.TabIndex = 2;
+            this.label2.Text = "Admin Port";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(25, 59);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(123, 20);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "OpenTTD Host";
+            // 
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
@@ -124,58 +178,6 @@
             this.button2.Text = "Send Message";
             this.button2.UseVisualStyleBackColor = true;
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Minion Pro", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(25, 59);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(116, 23);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "OpenTTD Host";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Minion Pro", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(49, 99);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(92, 23);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Admin Port";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Minion Pro", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(13, 144);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(128, 23);
-            this.label3.TabIndex = 3;
-            this.label3.Text = "Admin Password";
-            // 
-            // wTextHost
-            // 
-            this.wTextHost.Location = new System.Drawing.Point(147, 60);
-            this.wTextHost.Name = "wTextHost";
-            this.wTextHost.Size = new System.Drawing.Size(148, 22);
-            this.wTextHost.TabIndex = 4;
-            // 
-            // wTextPort
-            // 
-            this.wTextPort.Location = new System.Drawing.Point(147, 100);
-            this.wTextPort.Name = "wTextPort";
-            this.wTextPort.Size = new System.Drawing.Size(148, 22);
-            this.wTextPort.TabIndex = 5;
-            // 
-            // wTextPassword
-            // 
-            this.wTextPassword.Location = new System.Drawing.Point(147, 145);
-            this.wTextPassword.Name = "wTextPassword";
-            this.wTextPassword.PasswordChar = '*';
-            this.wTextPassword.Size = new System.Drawing.Size(148, 22);
-            this.wTextPassword.TabIndex = 6;
-            // 
             // tabPage3
             // 
             this.tabPage3.BackColor = System.Drawing.SystemColors.Control;
@@ -192,8 +194,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(453, 382);
             this.Controls.Add(this.tabControl1);
+            this.MinimumSize = new System.Drawing.Size(471, 429);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "COAN";
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();

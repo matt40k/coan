@@ -12,12 +12,12 @@ namespace COAN
 {
     public partial class Form1 : Form
     {
-        NetworkClient networkClient = new NetworkClient();
+        readonly NetworkClient networkClient = new NetworkClient();
         public Dictionary<long, Client> clientPool = new Dictionary<long, Client>();
 
         private void button1_Click(object sender, EventArgs e)
         {
-            networkClient.Connect(wTextHost.Text, Int32.Parse(wTextPort.Text), wTextPassword.Text);
+            networkClient.Connect(wTextHost.Text, int.Parse(wTextPort.Text), wTextPassword.Text);
             networkClient.OnChat += new NetworkClient.onChat(networkClient_OnChat);
             networkClient.OnServerWelcome += new NetworkClient.onWelcome(onServerWelcome);
         }
