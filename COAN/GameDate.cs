@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace COAN
 {
     public class GameDate
     {
-        private Dictionary<int, String> months = new Dictionary<int, String>();
+        private Dictionary<int, string> months = new Dictionary<int, string>();
         public int year = 0;
         public int month = 0;
         public int day = 0;
@@ -152,7 +150,7 @@ namespace COAN
         /**
          * @return Standard date in Year-Month-Date format.
          */
-        public String toString()
+        public string toString()
         {
             day++;
             return day + "-" + months[month] + "-" + year;

@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace COAN
+﻿namespace COAN
 {
     public class Client
     {
-        public String name;
+        public string name;
         public int companyId;
         //public NetworkLanguage language;
-        public String address;
+        public string address;
         public GameDate joindate;
         public long clientId;
-
 
         public Client(long clientId)
         {

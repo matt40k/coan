@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using enums;
 using System.Threading;
 using System.Net.Sockets;
@@ -11,9 +8,9 @@ namespace COAN
 {
     public class NetworkClient
     {
-        private Protocol protocol;
+        private readonly Protocol protocol;
         private Socket socket;
-        private Thread mThread;
+        private readonly Thread mThread;
 
         public string botName = "Bot Name";
         public string botVersion = "BOT VERSION";
@@ -113,7 +110,8 @@ namespace COAN
 
         public void Start()
         {
-            mThread.Start();
+            if (!mThread.IsAlive)
+                mThread.Start();
         }
 
         public void receive()
@@ -253,10 +251,11 @@ namespace COAN
         #region Receive Packets
         public void receiveServerClientInfo(Packet p)
         {
-            Client client = new Client(p.readUint32());
-
-            client.address = p.readString();
-            client.name = p.readString();
+            Client client = new Client(p.readUint32())
+            {
+                address = p.readString(),
+                name = p.readString()
+            };
             //client.language = NetworkLanguage.valueOf(p.readUint8());
             p.readUint8();
             client.joindate = new GameDate(p.readUint32());
@@ -264,8 +263,7 @@ namespace COAN
 
             //openttd.clientPool.Add(client.clientId, client); THIS SHOULD BE IMPLEMENTED IN THE EVENT
 
-            if (OnClientInfo != null)
-                OnClientInfo(client);
+            OnClientInfo?.Invoke(client);
         }
 
         public void receiveServerProtocol(Packet p)
@@ -290,8 +288,7 @@ namespace COAN
                 }
             }
 
-            if (OnProtocol != null)
-                OnProtocol(protocol);
+            OnProtocol?.Invoke(protocol);
         }
 
         public void receiveServerWelcome(Packet p)
@@ -313,9 +310,8 @@ namespace COAN
 
             game.map = map;
 
-            if (OnServerWelcome != null)
-                OnServerWelcome();
-            
+            OnServerWelcome?.Invoke();
+
         }
 
         public void receiveServerChat(Packet p)
@@ -326,9 +322,8 @@ namespace COAN
             String message = p.readString();
             long data = p.readUint64();
 
-            if(OnChat != null)
-                OnChat(action, dest, clientId, message, data);
-            
+            OnChat?.Invoke(action, dest, clientId, message, data);
+
         }
 
         public void receiveServerCmdNames(Packet p)

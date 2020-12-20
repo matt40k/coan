@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace COAN
+﻿namespace COAN
 {
     class Game
     {
-        public String name;
-        public String versionGame;
+        public string name;
+        public string versionGame;
         public int versionProtocol;
         public bool dedicated;
 
