@@ -74,9 +74,21 @@ namespace COAN
 
         public bool Connect(string host, int port)
         {
-            if (adminPassword.Length == 0)
+            if (adminPassword.Length == 0 || host.Length == 0)
             {
-                MessageBox.Show("Can't connect with empty password");
+                var errorMessage = "Can't connect with empty ";
+                if ((adminPassword.Length + host.Length) ==0)
+                {
+                    errorMessage += "host or password";
+                }
+                else
+                {
+                    if ((adminPassword.Length) == 0)
+                        errorMessage += "password";
+                    if ((host.Length) == 0)
+                        errorMessage += "password";
+                }
+                MessageBox.Show(errorMessage);
                 return false;
             }
             try
