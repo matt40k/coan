@@ -5,7 +5,7 @@ namespace COAN
 {
     public static class ExtensionMethods
     {
-        public static string getDispatchName(this enums.PacketType packet)
+        public static string getDispatchName(this PacketType packet)
         {
             StringBuilder result = new StringBuilder();
 

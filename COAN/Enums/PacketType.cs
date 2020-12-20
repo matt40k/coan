@@ -1,4 +1,4 @@
-﻿namespace enums
+﻿namespace COAN
 {
     public enum PacketType
     {   ///<summary> The admin announces and authenticates itself to the</summary> 

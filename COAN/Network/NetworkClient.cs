@@ -1,5 +1,4 @@
 ﻿using System;
-using enums;
 using System.Threading;
 using System.Net.Sockets;
 using System.Windows.Forms;
@@ -28,7 +27,7 @@ namespace COAN
         /// <param name="clientId">The ID of the Client who sent the message</param>
         /// <param name="message">The actual chat message</param>
         /// <param name="data"></param>
-        public delegate void onChat(enums.NetworkAction action, enums.DestType dest, long clientId, string message, long data);
+        public delegate void onChat(NetworkAction action, DestType dest, long clientId, string message, long data);
         /// <summary>
         /// Fired when Client information is received
         /// </summary>
@@ -100,7 +99,7 @@ namespace COAN
 
         public void chatPublic(string msg)
         {
-            sendAdminChat(enums.NetworkAction.NETWORK_ACTION_CHAT, enums.DestType.DESTTYPE_BROADCAST, 0, msg, 0);
+            sendAdminChat(NetworkAction.NETWORK_ACTION_CHAT, DestType.DESTTYPE_BROADCAST, 0, msg, 0);
         }
 
         public Boolean IsConnected()
@@ -189,7 +188,7 @@ namespace COAN
 
         public void sendAdminJoin()
         {
-            Packet p = new Packet(getSocket(), enums.PacketType.ADMIN_PACKET_ADMIN_JOIN);
+            Packet p = new Packet(getSocket(), PacketType.ADMIN_PACKET_ADMIN_JOIN);
 
             p.WriteString(adminPassword);
             p.WriteString(botName);
@@ -200,7 +199,7 @@ namespace COAN
 
         public void sendAdminChat(NetworkAction action, DestType type, long dest, String msg, long data)
         {
-            Packet p = new Packet(getSocket(), enums.PacketType.ADMIN_PACKET_ADMIN_CHAT);
+            Packet p = new Packet(getSocket(), PacketType.ADMIN_PACKET_ADMIN_CHAT);
             p.writeUint8((short)action);
             p.writeUint8((short)type);
             p.writeUint32(dest);

@@ -1,4 +1,4 @@
-﻿namespace enums
+﻿namespace COAN
 {
     public enum NetworkAction
     {

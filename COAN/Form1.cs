@@ -22,7 +22,7 @@ namespace COAN
             networkClient.OnServerWelcome += new NetworkClient.onWelcome(onServerWelcome);
         }
 
-        void networkClient_OnChat(enums.NetworkAction action, enums.DestType dest, long clientId, string message, long data)
+        void networkClient_OnChat(NetworkAction action, DestType dest, long clientId, string message, long data)
         {
             if (textBox2.InvokeRequired == true)
             {
