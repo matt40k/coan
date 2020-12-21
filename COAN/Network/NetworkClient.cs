@@ -18,9 +18,7 @@ namespace COAN
         public string botName = Info.Title;
         public string botVersion = Info.Version;
 
-        //public string adminHost = "";
         public string adminPassword = "";
-        //public int adminPort;
 
         #region Delegates
         /// <summary>
@@ -315,6 +313,7 @@ namespace COAN
 
         public void receiveServerWelcome(Packet p)
         {
+
             Map map = new Map
             {
                 name = p.readString(),
