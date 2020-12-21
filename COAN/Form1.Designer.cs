@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.button1 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textChatToSend = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -43,9 +43,9 @@
             this.button2 = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.labelVersion = new System.Windows.Forms.Label();
             this.labelDescription = new System.Windows.Forms.Label();
             this.labelTitle = new System.Windows.Forms.Label();
-            this.labelVersion = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -62,13 +62,13 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // textBox1
+            // textChatToSend
             // 
-            this.textBox1.Location = new System.Drawing.Point(8, 294);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(429, 22);
-            this.textBox1.TabIndex = 2;
-            this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
+            this.textChatToSend.Location = new System.Drawing.Point(8, 294);
+            this.textChatToSend.Name = "textChatToSend";
+            this.textChatToSend.Size = new System.Drawing.Size(429, 22);
+            this.textChatToSend.TabIndex = 2;
+            this.textChatToSend.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             // 
             // textBox2
             // 
@@ -167,7 +167,7 @@
             this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
             this.tabPage2.Controls.Add(this.button2);
             this.tabPage2.Controls.Add(this.textBox2);
-            this.tabPage2.Controls.Add(this.textBox1);
+            this.tabPage2.Controls.Add(this.textChatToSend);
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -183,6 +183,7 @@
             this.button2.TabIndex = 2;
             this.button2.Text = "Send Message";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // tabPage3
             // 
@@ -207,12 +208,20 @@
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "About";
             // 
+            // labelVersion
+            // 
+            this.labelVersion.AutoSize = true;
+            this.labelVersion.Location = new System.Drawing.Point(20, 103);
+            this.labelVersion.Name = "labelVersion";
+            this.labelVersion.Size = new System.Drawing.Size(0, 17);
+            this.labelVersion.TabIndex = 2;
+            // 
             // labelDescription
             // 
             this.labelDescription.AutoSize = true;
             this.labelDescription.Location = new System.Drawing.Point(20, 40);
             this.labelDescription.Name = "labelDescription";
-            this.labelDescription.Size = new System.Drawing.Size(79, 17);
+            this.labelDescription.Size = new System.Drawing.Size(0, 17);
             this.labelDescription.TabIndex = 1;
             // 
             // labelTitle
@@ -220,16 +229,8 @@
             this.labelTitle.AutoSize = true;
             this.labelTitle.Location = new System.Drawing.Point(20, 10);
             this.labelTitle.Name = "labelTitle";
-            this.labelTitle.Size = new System.Drawing.Size(35, 17);
+            this.labelTitle.Size = new System.Drawing.Size(0, 17);
             this.labelTitle.TabIndex = 0;
-            // 
-            // labelVersion
-            // 
-            this.labelVersion.AutoSize = true;
-            this.labelVersion.Location = new System.Drawing.Point(20, 103);
-            this.labelVersion.Name = "labelVersion";
-            this.labelVersion.Size = new System.Drawing.Size(56, 17);
-            this.labelVersion.TabIndex = 2;
             // 
             // Form1
             // 
@@ -254,7 +255,7 @@
         #endregion
 
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textChatToSend;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
