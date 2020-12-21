@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Text;
 using System.Net.Sockets;
+using NLog;
 
 namespace COAN
-{
+{ 
     public class Packet
     {
+        public static Logger logger = LogManager.GetCurrentClassLogger();
+
         public const int SEND_MTU = 1460;
         public const int POS_PACKET_TYPE = 2;
 

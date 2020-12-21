@@ -17,9 +17,20 @@ namespace COAN
 
         private void button1_Click(object sender, EventArgs e)
         {
-            networkClient.Connect(wTextHost.Text, int.Parse(wTextPort.Text), wTextPassword.Text);
-            networkClient.OnChat += new NetworkClient.onChat(networkClient_OnChat);
-            networkClient.OnServerWelcome += new NetworkClient.onWelcome(onServerWelcome);
+            if (networkClient.IsConnected)
+            {
+                networkClient.Disconnect();
+            }
+            else
+            {
+                networkClient.Connect(wTextHost.Text, int.Parse(wTextPort.Text), wTextPassword.Text);
+                networkClient.OnChat += new NetworkClient.onChat(networkClient_OnChat);
+                networkClient.OnServerWelcome += new NetworkClient.onWelcome(onServerWelcome);
+            }
+            if (networkClient.IsConnected)
+                button1.Text = "Disconnect";
+            else
+                button1.Text = "Connect";
         }
 
         void networkClient_OnChat(NetworkAction action, DestType dest, long clientId, string message, long data)

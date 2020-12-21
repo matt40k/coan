@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Net.Sockets;
+using NLog;
 
 namespace COAN
 {
     class NetworkOutputThread
     {
+        public static Logger logger = LogManager.GetCurrentClassLogger();
+
         protected static ConcurrentDictionary<Socket, BlockingCollection<Packet>> queues;
 
         static NetworkOutputThread()

@@ -23,7 +23,7 @@ namespace COAN
             set { wLblComp.Text = value; }
         }
 
-        public string Name
+        public string ClientName
         {
             get { return wLblName.Text; }
             set { wLblName.Text = value; }

@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Reflection;
 using System.Threading;
 using System.Net.Sockets;
 using System.Windows.Forms;
+using NLog;
 
 namespace COAN
 {
     public class NetworkClient
     {
+        public static Logger logger = LogManager.GetCurrentClassLogger();
+
         private readonly Protocol protocol;
         private Socket socket;
         private readonly Thread mThread;
@@ -14,9 +18,9 @@ namespace COAN
         public string botName = Info.Title;
         public string botVersion = Info.Version;
 
-        public string adminHost = "";
+        //public string adminHost = "";
         public string adminPassword = "";
-        public int adminPort;
+        //public int adminPort;
 
         #region Delegates
         /// <summary>
@@ -51,33 +55,26 @@ namespace COAN
             {
                 Thread.CurrentThread.IsBackground = true;
 
-                while (IsConnected() == true)
+                while (IsConnected)
                     receive();
 
                 Thread.CurrentThread.Abort();
             });
         }
 
-        public void Connect(string hostname, int port, string password)
+        public void Disconnect()
         {
-            this.adminHost = hostname;
-            this.adminPort = port;
+            socket.Close();
+            //mThread.Abort();
+        }
+
+        public bool Connect(string hostname, int port, string password)
+        {
             this.adminPassword = password;
-            this.Connect();
-        }
-
-        public void Connect()
-        {
-            if (Connect(this.adminHost, this.adminPort) == true)
-                Start();
-        }
-
-        public bool Connect(string host, int port)
-        {
-            if (adminPassword.Length == 0 || host.Length == 0)
+            if (adminPassword.Length == 0 || hostname.Length == 0)
             {
                 var errorMessage = "Can't connect with empty ";
-                if ((adminPassword.Length + host.Length) ==0)
+                if ((adminPassword.Length + hostname.Length) == 0)
                 {
                     errorMessage += "host or password";
                 }
@@ -85,39 +82,47 @@ namespace COAN
                 {
                     if ((adminPassword.Length) == 0)
                         errorMessage += "password";
-                    if ((host.Length) == 0)
+                    if ((hostname.Length) == 0)
                         errorMessage += "password";
                 }
                 MessageBox.Show(errorMessage);
                 return false;
             }
+            //this.adminHost = hostname;
+            //this.adminPort = port;
+            //
+
             try
             {
                 this.socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 this.socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
-                this.socket.Connect(host, port);
+                this.socket.Connect(hostname, port);
 
                 sendAdminJoin();
             }
             catch (Exception ex)
             {
-                var errorMessage = string.Format("An error occurred while trying to connect to: {0} - Error message: {1)", host, ex.Message);
+                var errorMessage = string.Format("An error occurred while trying to connect to: {0} - Error message: {1)", hostname, ex.Message);
                 MessageBox.Show(errorMessage);
                 return false;
             }
+            Start();
             return true;
         }
-
-
 
         public void chatPublic(string msg)
         {
             sendAdminChat(NetworkAction.NETWORK_ACTION_CHAT, DestType.DESTTYPE_BROADCAST, 0, msg, 0);
         }
 
-        public Boolean IsConnected()
+        public bool IsConnected
         {
-            return socket.Connected;
+            get
+            {
+                if (socket != null)
+                    return socket.Connected;
+                return false;
+            }
         }
 
         public void Start()
@@ -141,23 +146,28 @@ namespace COAN
         public void delegatePacket(Packet p)
         {
             Type t = this.GetType();
-            String dispatchName = p.getType().getDispatchName();
-
-            System.Reflection.MethodInfo method = t.GetMethod(dispatchName);
-
-            System.Reflection.MethodInfo[] mis = t.GetMethods();
+            string dispatchName = p.getType().getDispatchName();
 
             try
             {
-                method.Invoke(this, new object[] { p });
+                MethodInfo method = t.GetMethod(dispatchName);
+                MethodInfo[] mis = t.GetMethods();
+
+                if (method != null)
+                {
+                    method.Invoke(this, new object[] { p });
+                }
             }
             catch (NullReferenceException)
             {
-                Console.WriteLine("Method: " + dispatchName);
+                logger.Log(LogLevel.Error, string.Format("Method: {0}", dispatchName));
+            }
+            catch (Exception)
+            { 
             }
         }
 
-        #region Polls
+#region Polls
         public void pollCmdNames()
         {
             sendAdminPoll(AdminUpdateType.ADMIN_UPDATE_CMD_NAMES);
@@ -195,9 +205,9 @@ namespace COAN
         {
             sendAdminPoll(AdminUpdateType.ADMIN_UPDATE_DATE);
         }
-        #endregion
+#endregion
 
-        #region Send Packets
+#region Send Packets
 
         public void sendAdminJoin()
         {
@@ -258,9 +268,9 @@ namespace COAN
             NetworkOutputThread.append(p);
         }
 
-        #endregion
+#endregion
 
-        #region Receive Packets
+#region Receive Packets
         public void receiveServerClientInfo(Packet p)
         {
             Client client = new Client(p.readUint32())
@@ -305,22 +315,23 @@ namespace COAN
 
         public void receiveServerWelcome(Packet p)
         {
-            Map map = new Map();
-            
-            Game game = new Game();
-            
-            game.name = p.readString();
-            game.versionGame = p.readString();
-            game.dedicated = p.readBool();
+            Map map = new Map
+            {
+                name = p.readString(),
+                seed = p.readUint32(),
+                landscape = (Landscape)p.readUint8(),
+                dateStart = new GameDate(p.readUint32()),
+                width = p.readUint16(),
+                height = p.readUint16()
+            };
 
-            map.name = p.readString();
-            map.seed = p.readUint32();
-            map.landscape = (Landscape) p.readUint8();
-            map.dateStart = new GameDate(p.readUint32());
-            map.width = p.readUint16();
-            map.height = p.readUint16();
-
-            game.map = map;
+            Game game = new Game
+            {
+                name = p.readString(),
+                versionGame = p.readString(),
+                dedicated = p.readBool(),
+                map = map
+            };
 
             OnServerWelcome?.Invoke();
 
@@ -331,7 +342,7 @@ namespace COAN
             NetworkAction action = (NetworkAction) p.readUint8();
             DestType dest = (DestType) p.readUint8();
             long clientId = p.readUint32();
-            String message = p.readString();
+            string message = p.readString();
             long data = p.readUint64();
 
             OnChat?.Invoke(action, dest, clientId, message, data);
@@ -343,7 +354,7 @@ namespace COAN
             while (p.readBool())
             {
                 int cmdId = p.readUint16();
-                String cmdName = p.readString();
+                string cmdName = p.readString();
                 if(DoCommandName.enumeration.ContainsKey(cmdName) == false)
                     DoCommandName.enumeration.Add(cmdName, cmdId);
             }
@@ -353,9 +364,9 @@ namespace COAN
         {
 
         }
-        #endregion
+#endregion
 
-        #region Getters
+#region Getters
         public Socket getSocket()
         {
             return this.socket;
@@ -365,7 +376,7 @@ namespace COAN
         {
             return this.protocol;
         }
-        #endregion
+#endregion
 
     }
 }

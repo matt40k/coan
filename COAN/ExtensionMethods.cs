@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Text;
+using NLog;
 
 namespace COAN
 {
     public static class ExtensionMethods
     {
+        public static Logger logger = LogManager.GetCurrentClassLogger();
+
         public static string getDispatchName(this PacketType packet)
         {
             StringBuilder result = new StringBuilder();

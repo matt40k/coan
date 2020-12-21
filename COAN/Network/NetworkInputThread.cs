@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Net.Sockets;
+using NLog;
 
 namespace COAN
 {
-    class NetworkInputThread
+    public class NetworkInputThread
     {
+        public static Logger logger = LogManager.GetCurrentClassLogger();
+
         protected static ConcurrentDictionary<Socket, BlockingCollection<Packet>> queues;
 
         static NetworkInputThread()
@@ -50,22 +53,21 @@ namespace COAN
                         if (socket.Connected == false)
                         {
                             queues.TryRemove(socket, out _);
-                            //log.info("Socket closed: {}", socket.getRemoteSocketAddress().toString());
+                            logger.Log(LogLevel.Trace, string.Format("Socket closed: "));
                             continue;
                         }
 
                         Packet p = new Packet(socket);
                         append(p);
-                        Console.WriteLine("Received Packet: {0}", p.getType());
-                        //log.trace("Received Packet {}", p.getType());
+                        logger.Log(LogLevel.Trace, string.Format("Received Packet: {0}", p.getType()));
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        //log.error("Failed reading packet", ex);
+                        logger.Log(LogLevel.Error, string.Format("Failed reading packet", ex));
                     }
                 }
             }
         }
 
-    } // END CLASS
+    } // END CLASSc
 }

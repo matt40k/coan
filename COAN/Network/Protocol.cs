@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
+using NLog;
 
 namespace COAN
 {
     public class Protocol
     {
+        public static Logger logger = LogManager.GetCurrentClassLogger();
+
         internal int version = -1;
         protected Dictionary<AdminUpdateType, ArrayList> supportedFrequencies;
 
