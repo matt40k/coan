@@ -40,7 +40,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.button2 = new System.Windows.Forms.Button();
+            this.buttonSendMessage = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.labelVersion = new System.Windows.Forms.Label();
@@ -165,7 +165,7 @@
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
-            this.tabPage2.Controls.Add(this.button2);
+            this.tabPage2.Controls.Add(this.buttonSendMessage);
             this.tabPage2.Controls.Add(this.textBox2);
             this.tabPage2.Controls.Add(this.textChatToSend);
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
@@ -175,15 +175,16 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Chat";
             // 
-            // button2
+            // buttonSendMessage
             // 
-            this.button2.Location = new System.Drawing.Point(173, 322);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "Send Message";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.buttonSendMessage.Enabled = false;
+            this.buttonSendMessage.Location = new System.Drawing.Point(173, 322);
+            this.buttonSendMessage.Name = "buttonSendMessage";
+            this.buttonSendMessage.Size = new System.Drawing.Size(75, 23);
+            this.buttonSendMessage.TabIndex = 2;
+            this.buttonSendMessage.Text = "Send Message";
+            this.buttonSendMessage.UseVisualStyleBackColor = true;
+            this.buttonSendMessage.Click += new System.EventHandler(this.buttonSendMessage_Click);
             // 
             // tabPage3
             // 
@@ -260,7 +261,7 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button buttonSendMessage;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;

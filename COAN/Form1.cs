@@ -27,9 +27,15 @@ namespace COAN
                 networkClient.OnServerWelcome += new NetworkClient.onWelcome(onServerWelcome);
             }
             if (networkClient.IsConnected)
+            {
                 button1.Text = "Disconnect";
+                buttonSendMessage.Enabled = true;
+            }
             else
+            {
                 button1.Text = "Connect";
+                buttonSendMessage.Enabled = false;
+            }
         }
 
         void networkClient_OnChat(NetworkAction action, DestType dest, long clientId, string message, long data)
@@ -53,11 +59,14 @@ namespace COAN
             networkClient.chatPublic(msg);
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void buttonSendMessage_Click(object sender, EventArgs e)
         {
-            logger.Log(LogLevel.Trace, string.Format("User click send message - {0}", textChatToSend.Text));
-            Chat(textChatToSend.Text);
-            textChatToSend.Text = "";
+            if (!string.IsNullOrWhiteSpace(textChatToSend.Text))
+            {
+                logger.Log(LogLevel.Trace, string.Format("User click send message - {0}", textChatToSend.Text));
+                Chat(textChatToSend.Text);
+                textChatToSend.Text = "";
+            }
         }
 
         public Form1()
@@ -73,7 +82,7 @@ namespace COAN
         {
             if (e.KeyCode == Keys.Return)
             {
-                button2_Click(sender, e);
+                buttonSendMessage_Click(sender, e);
             }
         }
 
