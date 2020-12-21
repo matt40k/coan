@@ -11,12 +11,12 @@ namespace COAN
         private Socket socket;
         private readonly Thread mThread;
 
-        public string botName = "Bot Name";
-        public string botVersion = "BOT VERSION";
+        public string botName = Info.Title;
+        public string botVersion = Info.Version;
 
         public string adminHost = "";
         public string adminPassword = "";
-        public int adminPort = 3978;
+        public int adminPort;
 
         #region Delegates
         /// <summary>

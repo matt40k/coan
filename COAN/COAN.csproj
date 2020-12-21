@@ -72,6 +72,7 @@
     <Compile Include="Enums\Landscape.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameDate.cs" />
+    <Compile Include="Info.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Network\Network.cs" />
     <Compile Include="Enums\NetworkAction.cs" />
