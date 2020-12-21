@@ -63,6 +63,10 @@ namespace COAN
         public Form1()
         {
             InitializeComponent();
+
+            labelTitle.Text = Info.Title;
+            labelDescription.Text = Info.Description;
+            labelVersion.Text = string.Format("Version: {0}", Info.Version);
         }
 
         private void textBox1_KeyDown(object sender, KeyEventArgs e)

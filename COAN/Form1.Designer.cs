@@ -43,8 +43,9 @@
             this.button2 = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.labelTitle = new System.Windows.Forms.Label();
             this.labelDescription = new System.Windows.Forms.Label();
+            this.labelTitle = new System.Windows.Forms.Label();
+            this.labelVersion = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -196,6 +197,7 @@
             // tabPage4
             // 
             this.tabPage4.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage4.Controls.Add(this.labelVersion);
             this.tabPage4.Controls.Add(this.labelDescription);
             this.tabPage4.Controls.Add(this.labelTitle);
             this.tabPage4.Location = new System.Drawing.Point(4, 25);
@@ -205,32 +207,29 @@
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "About";
             // 
-            // labelTitle
-            // 
-            this.labelTitle.AutoSize = true;
-            this.labelTitle.Location = new System.Drawing.Point(18, 22);
-            this.labelTitle.Name = "labelTitle";
-            this.labelTitle.Size = new System.Drawing.Size(0, 17);
-            this.labelTitle.TabIndex = 0;
-            this.labelTitle.Text = Info.Title;
-            // 
             // labelDescription
             // 
             this.labelDescription.AutoSize = true;
-            this.labelDescription.Location = new System.Drawing.Point(21, 90);
+            this.labelDescription.Location = new System.Drawing.Point(20, 40);
             this.labelDescription.Name = "labelDescription";
-            this.labelDescription.Size = new System.Drawing.Size(0, 17);
+            this.labelDescription.Size = new System.Drawing.Size(79, 17);
             this.labelDescription.TabIndex = 1;
-            this.labelTitle.Text = Info.Description;
+            // 
+            // labelTitle
+            // 
+            this.labelTitle.AutoSize = true;
+            this.labelTitle.Location = new System.Drawing.Point(20, 10);
+            this.labelTitle.Name = "labelTitle";
+            this.labelTitle.Size = new System.Drawing.Size(35, 17);
+            this.labelTitle.TabIndex = 0;
             // 
             // labelVersion
             // 
-            this.labelDescription.AutoSize = true;
-            this.labelDescription.Location = new System.Drawing.Point(21, 90);
-            this.labelDescription.Name = "labelVersion";
-            this.labelDescription.Size = new System.Drawing.Size(0, 17);
-            this.labelDescription.TabIndex = 1;
-            this.labelTitle.Text = string.Format("Version: {0}", Info.Version);
+            this.labelVersion.AutoSize = true;
+            this.labelVersion.Location = new System.Drawing.Point(20, 103);
+            this.labelVersion.Name = "labelVersion";
+            this.labelVersion.Size = new System.Drawing.Size(56, 17);
+            this.labelVersion.TabIndex = 2;
             // 
             // Form1
             // 
@@ -271,6 +270,7 @@
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.Label labelDescription;
         private System.Windows.Forms.Label labelTitle;
+        private System.Windows.Forms.Label labelVersion;
     }
 }
 
