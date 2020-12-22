@@ -84,7 +84,6 @@
     <Compile Include="GameDate.cs" />
     <Compile Include="Info.cs" />
     <Compile Include="Map.cs" />
-    <Compile Include="Network\Network.cs" />
     <Compile Include="Enums\NetworkAction.cs" />
     <Compile Include="Network\NetworkClient.cs" />
     <Compile Include="Network\NetworkInputThread.cs" />

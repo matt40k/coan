@@ -63,12 +63,11 @@ namespace COAN
         public void Disconnect()
         {
             socket.Close();
-            //mThread.Abort();
         }
 
         public bool Connect(string hostname, int port, string password)
         {
-            this.adminPassword = password;
+            adminPassword = password;
             if (adminPassword.Length == 0 || hostname.Length == 0)
             {
                 var errorMessage = "Can't connect with empty ";
@@ -86,9 +85,7 @@ namespace COAN
                 MessageBox.Show(errorMessage);
                 return false;
             }
-            //this.adminHost = hostname;
-            //this.adminPort = port;
-            //
+
 
             try
             {
@@ -209,6 +206,7 @@ namespace COAN
 
         public void sendAdminJoin()
         {
+            logger.Log(LogLevel.Trace, string.Format("sendAdminJoin - adminPassword: {0} | botName: {1} | botVersion: {2}", adminPassword, botName, botVersion));
             Packet p = new Packet(getSocket(), PacketType.ADMIN_PACKET_ADMIN_JOIN);
 
             p.WriteString(adminPassword);
