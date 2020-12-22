@@ -9,6 +9,7 @@ namespace COAN
     {
         public static Logger logger = LogManager.GetCurrentClassLogger();
 
+        private Config _config;
         readonly NetworkClient networkClient = new NetworkClient();
         public Dictionary<long, Client> clientPool = new Dictionary<long, Client>();
 
@@ -76,6 +77,18 @@ namespace COAN
             labelTitle.Text = Info.Title;
             labelDescription.Text = Info.Description;
             labelVersion.Text = string.Format("Version: {0}", Info.Version);
+
+            _config = new Config();
+            var defaultHost = _config.GetDefaultHost;
+            var defaultPort = _config.GetDefaultPort.ToString();
+            var defaultPassword = _config.GetDefaultPassword;
+
+            if (!string.IsNullOrWhiteSpace(defaultHost))
+                wTextHost.Text = defaultHost;
+            if (!string.IsNullOrWhiteSpace(defaultPort))
+                wTextPort.Text = defaultPort;
+            if (!string.IsNullOrWhiteSpace(defaultPassword))
+                wTextPassword.Text = defaultPassword;
         }
 
         private void textBox1_KeyDown(object sender, KeyEventArgs e)

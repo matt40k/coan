@@ -67,6 +67,8 @@
     <Compile Include="ClientInfo.Designer.cs">
       <DependentUpon>ClientInfo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Config.cs" />
+    <Compile Include="Poco\Config.cs" />
     <Compile Include="Enums\AdminUpdate.cs" />
     <Compile Include="Enums\DestType.cs" />
     <Compile Include="Enums\DoCommandName.cs" />
