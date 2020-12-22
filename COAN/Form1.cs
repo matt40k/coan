@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using NLog;
 
@@ -11,7 +10,6 @@ namespace COAN
 
         private Config _config;
         readonly NetworkClient networkClient = new NetworkClient();
-        public Dictionary<long, Client> clientPool = new Dictionary<long, Client>();
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -46,7 +44,7 @@ namespace COAN
                 textBox2.Invoke(
                     (MethodInvoker)delegate
                     {
-                        textBox2.AppendText(Convert.ToString(clientPool[clientId].name));
+                        textBox2.AppendText(Convert.ToString(networkClient.GetClient(clientId).name));
                         textBox2.AppendText(" said: " + message);
                         textBox2.AppendText(Environment.NewLine);
                     });

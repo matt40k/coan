@@ -4,6 +4,7 @@ using System.Threading;
 using System.Net.Sockets;
 using System.Windows.Forms;
 using NLog;
+using System.Collections.Generic;
 
 namespace COAN
 {
@@ -15,10 +16,17 @@ namespace COAN
         private Socket socket;
         private readonly Thread mThread;
 
+        public Dictionary<long, Client> clientPool = new Dictionary<long, Client>();
+
         public string botName = Info.Title;
         public string botVersion = Info.Version;
 
         public string adminPassword = "";
+
+        public Client GetClient(long id)
+        {
+            return clientPool[id];
+        }
 
         #region Delegates
         /// <summary>
@@ -279,7 +287,7 @@ namespace COAN
             client.joindate = new GameDate(p.readUint32());
             client.companyId = p.readUint8();
 
-            //openttd.clientPool.Add(client.clientId, client); THIS SHOULD BE IMPLEMENTED IN THE EVENT
+            clientPool.Add(client.clientId, client);
 
             OnClientInfo?.Invoke(client);
         }
