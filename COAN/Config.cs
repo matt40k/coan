@@ -30,7 +30,10 @@ namespace COAN
                 {
                     var configContent = File.ReadAllText(GetAppConfig);
                     if (!string.IsNullOrWhiteSpace(configContent))
+                    {
+                        logger.Log(LogLevel.Trace, "Config found");
                         return JsonConvert.DeserializeObject<Poco.Config>(configContent);
+                    }
                 }
                 return null;
             }
