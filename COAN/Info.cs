@@ -94,5 +94,13 @@ namespace COAN
         {
             get { return Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase).Substring(6); }
         }
+
+        /// <summary>
+        /// Gets User Agent - using the application title and version
+        /// </summary>
+        protected internal static string UserAgent
+        {
+            get { return string.Concat(Title, "/", Version); }
+        }
     }
 }

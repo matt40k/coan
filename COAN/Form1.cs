@@ -11,8 +11,10 @@ namespace COAN
         public static Logger logger = LogManager.GetCurrentClassLogger();
 
         private readonly Config _config;
-        private DataTable ClientDataTable;
+        private readonly DataTable ClientDataTable;
         private readonly NetworkClient networkClient = new NetworkClient();
+        private string downloadUrl;
+        private bool isOutofdate;
 
         public Form1()
         {
@@ -36,6 +38,18 @@ namespace COAN
 
             ClientDataTable = CreateClientDataTable;
             // AddExampleClient();
+
+            var update = new Update("matt40k", "coan");
+
+            isOutofdate = update.IsOutofdate;
+            if (isOutofdate)
+            {
+                downloadUrl = update.DownloadUrl;
+                this.buttonUpdate.Visible = true;
+            }
+            else
+                this.buttonUpdate.Visible = false;
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -188,6 +202,20 @@ namespace COAN
             catch (Exception openLog_Ex)
             {
                 logger.Log(LogLevel.Error, openLog_Ex.Message);
+            }
+        }
+
+        private void buttonUpdate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Process prc = new Process();
+                prc.StartInfo.FileName = downloadUrl;
+                prc.Start();
+            }
+            catch (Exception openUpdate_Ex)
+            {
+                logger.Log(LogLevel.Error, openUpdate_Ex.Message);
             }
         }
     }

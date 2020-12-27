@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.button1 = new System.Windows.Forms.Button();
             this.textChatToSend = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
@@ -44,10 +45,11 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.clientsDg = new System.Windows.Forms.DataGridView();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.buttonLogs = new System.Windows.Forms.Button();
             this.labelVersion = new System.Windows.Forms.Label();
             this.labelDescription = new System.Windows.Forms.Label();
             this.labelTitle = new System.Windows.Forms.Label();
-            this.buttonLogs = new System.Windows.Forms.Button();
+            this.buttonUpdate = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -220,6 +222,7 @@
             // tabPage4
             // 
             this.tabPage4.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage4.Controls.Add(this.buttonUpdate);
             this.tabPage4.Controls.Add(this.buttonLogs);
             this.tabPage4.Controls.Add(this.labelVersion);
             this.tabPage4.Controls.Add(this.labelDescription);
@@ -230,6 +233,16 @@
             this.tabPage4.Size = new System.Drawing.Size(445, 353);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "About";
+            // 
+            // buttonLogs
+            // 
+            this.buttonLogs.Location = new System.Drawing.Point(52, 201);
+            this.buttonLogs.Name = "buttonLogs";
+            this.buttonLogs.Size = new System.Drawing.Size(150, 50);
+            this.buttonLogs.TabIndex = 3;
+            this.buttonLogs.Text = "Logs";
+            this.buttonLogs.UseVisualStyleBackColor = true;
+            this.buttonLogs.Click += new System.EventHandler(this.buttonLogs_Click);
             // 
             // labelVersion
             // 
@@ -255,15 +268,15 @@
             this.labelTitle.Size = new System.Drawing.Size(0, 17);
             this.labelTitle.TabIndex = 0;
             // 
-            // buttonLogs
+            // buttonUpdate
             // 
-            this.buttonLogs.Location = new System.Drawing.Point(52, 201);
-            this.buttonLogs.Name = "buttonLogs";
-            this.buttonLogs.Size = new System.Drawing.Size(150, 50);
-            this.buttonLogs.TabIndex = 3;
-            this.buttonLogs.Text = "Logs";
-            this.buttonLogs.UseVisualStyleBackColor = true;
-            this.buttonLogs.Click += new System.EventHandler(this.buttonLogs_Click);
+            this.buttonUpdate.Location = new System.Drawing.Point(234, 201);
+            this.buttonUpdate.Name = "buttonUpdate";
+            this.buttonUpdate.Size = new System.Drawing.Size(150, 50);
+            this.buttonUpdate.TabIndex = 4;
+            this.buttonUpdate.Text = "Update";
+            this.buttonUpdate.UseVisualStyleBackColor = true;
+            this.buttonUpdate.Click += new System.EventHandler(this.buttonUpdate_Click);
             // 
             // Form1
             // 
@@ -271,6 +284,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(453, 382);
             this.Controls.Add(this.tabControl1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(471, 429);
             this.Name = "Form1";
             this.Text = "COAN";
@@ -309,6 +323,7 @@
         private System.Windows.Forms.Label labelVersion;
         private System.Windows.Forms.DataGridView clientsDg;
         private System.Windows.Forms.Button buttonLogs;
+        private System.Windows.Forms.Button buttonUpdate;
     }
 }
 
