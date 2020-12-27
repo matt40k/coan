@@ -10,7 +10,7 @@ namespace COAN
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         private readonly string appConfigDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "OpenTTD", "coan");
-        private Poco.Config _config;
+        private readonly Poco.Config _config;
 
         private string GetAppConfig
         {

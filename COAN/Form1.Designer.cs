@@ -42,13 +42,17 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.buttonSendMessage = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.clientsDg = new System.Windows.Forms.DataGridView();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.labelVersion = new System.Windows.Forms.Label();
             this.labelDescription = new System.Windows.Forms.Label();
             this.labelTitle = new System.Windows.Forms.Label();
+            this.buttonLogs = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.clientsDg)).BeginInit();
             this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -189,6 +193,7 @@
             // tabPage3
             // 
             this.tabPage3.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage3.Controls.Add(this.clientsDg);
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
@@ -196,9 +201,26 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Clients";
             // 
+            // clientsDg
+            // 
+            this.clientsDg.AllowUserToAddRows = false;
+            this.clientsDg.AllowUserToDeleteRows = false;
+            this.clientsDg.AllowUserToOrderColumns = true;
+            this.clientsDg.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.clientsDg.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.clientsDg.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.clientsDg.Location = new System.Drawing.Point(9, 7);
+            this.clientsDg.Name = "clientsDg";
+            this.clientsDg.ReadOnly = true;
+            this.clientsDg.RowHeadersWidth = 51;
+            this.clientsDg.RowTemplate.Height = 24;
+            this.clientsDg.Size = new System.Drawing.Size(430, 338);
+            this.clientsDg.TabIndex = 0;
+            // 
             // tabPage4
             // 
             this.tabPage4.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage4.Controls.Add(this.buttonLogs);
             this.tabPage4.Controls.Add(this.labelVersion);
             this.tabPage4.Controls.Add(this.labelDescription);
             this.tabPage4.Controls.Add(this.labelTitle);
@@ -233,6 +255,16 @@
             this.labelTitle.Size = new System.Drawing.Size(0, 17);
             this.labelTitle.TabIndex = 0;
             // 
+            // buttonLogs
+            // 
+            this.buttonLogs.Location = new System.Drawing.Point(52, 201);
+            this.buttonLogs.Name = "buttonLogs";
+            this.buttonLogs.Size = new System.Drawing.Size(150, 50);
+            this.buttonLogs.TabIndex = 3;
+            this.buttonLogs.Text = "Logs";
+            this.buttonLogs.UseVisualStyleBackColor = true;
+            this.buttonLogs.Click += new System.EventHandler(this.buttonLogs_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -247,6 +279,8 @@
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.clientsDg)).EndInit();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             this.ResumeLayout(false);
@@ -273,6 +307,8 @@
         private System.Windows.Forms.Label labelDescription;
         private System.Windows.Forms.Label labelTitle;
         private System.Windows.Forms.Label labelVersion;
+        private System.Windows.Forms.DataGridView clientsDg;
+        private System.Windows.Forms.Button buttonLogs;
     }
 }
 

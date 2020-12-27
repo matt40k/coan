@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Net.Sockets;
+using System.Threading;
 using NLog;
 
 namespace COAN
 {
-    class NetworkOutputThread
+    public class NetworkOutputThread
     {
         public static Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -14,9 +15,11 @@ namespace COAN
         static NetworkOutputThread()
         {
            queues = new ConcurrentDictionary<Socket, BlockingCollection<Packet>>();
-           System.Threading.Thread t = new System.Threading.Thread(run);
-           t.IsBackground = true;
-           t.Start();
+            Thread t = new Thread(Run)
+            {
+                IsBackground = true
+            };
+            t.Start();
         }
 
 
@@ -38,12 +41,12 @@ namespace COAN
         * Append a packet to the appropriate queue.
         * @param p Packet to append to the queue.
         */
-        public static void append(Packet p)
+        public static void Append(Packet p)
         {
             getQueue(p.getSocket()).Add(p);
         }
 
-        public static void run()
+        public static void Run()
         {
             while (true)
             {
@@ -54,22 +57,21 @@ namespace COAN
                         Packet p = q.Take();
 
                         /* if the socket is closed, remove it from the queue and leave the foreach */
-                        if (p.getSocket().Connected == false)
+                        if (!p.getSocket().Connected)
                         {
+                            logger.Log(LogLevel.Trace, string.Format("Connection closed - Sending Packet {0}", p.getType()));
                             queues.TryRemove(p.getSocket(), out _);
                             break;
                         }
                         p.Send();
-                        //log.trace("Sending Packet {}", p.getType());
+                        logger.Log(LogLevel.Trace, string.Format("Sending Packet {0}", p.getType()));
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        //log.error(null, ex);
+                        logger.Log(LogLevel.Error, string.Format("Sending Packet - Exception: {0}", ex.Message));
                     }
                 }
             }
-
-
         }
     }
 }

@@ -12,10 +12,10 @@ namespace COAN
         public const int SEND_MTU = 1460;
         public const int POS_PACKET_TYPE = 2;
 
-        int pos = 0;
-        byte[] buf = new byte[SEND_MTU];
+        private int pos = 0;
+        private readonly byte[] buf = new byte[SEND_MTU];
 
-        Socket socket;
+        private readonly Socket socket;
         PacketType type;
 
         public Packet(Socket socket, PacketType type)

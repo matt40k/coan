@@ -5,7 +5,7 @@ namespace COAN
 {
     public class GameDate
     {
-        private Dictionary<int, string> months = new Dictionary<int, string>();
+        private readonly Dictionary<int, string> months = new Dictionary<int, string>();
         public int year = 0;
         public int month = 0;
         public int day = 0;

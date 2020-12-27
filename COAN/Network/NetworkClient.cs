@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Threading;
-using System.Net.Sockets;
 using NLog;
-using System.Collections.Generic;
 
 namespace COAN
 {
@@ -20,7 +20,7 @@ namespace COAN
         public string botName = Info.Title;
         public string botVersion = Info.Version;
 
-        public string adminPassword = "";
+        public string adminPassword;
 
         public Client GetClient(long id)
         {
@@ -38,7 +38,7 @@ namespace COAN
 
         #region Delegates
         /// <summary>
-        /// Fired when messages are recieved
+        /// Fired when messages are received
         /// </summary>
         /// <param name="action"></param>
         /// <param name="dest"></param>
@@ -64,13 +64,15 @@ namespace COAN
 
         public NetworkClient()
         {
-            this.protocol = new Protocol();
+            protocol = new Protocol();
+            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
             mThread = new Thread(() =>
             {
                 Thread.CurrentThread.IsBackground = true;
 
                 while (IsConnected)
-                    receive();
+                    Receive();
 
                 Thread.CurrentThread.Abort();
             });
@@ -78,7 +80,7 @@ namespace COAN
 
         public void Disconnect()
         {
-            socket.Close();
+            socket.Disconnect(true);
         }
 
         public string Connect(string hostname, int port, string password)
@@ -105,11 +107,8 @@ namespace COAN
 
             try
             {
-                this.socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                this.socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
-                this.socket.Connect(hostname, port);
-
-                sendAdminJoin();
+                socket.Connect(hostname, port);
+                SendAdminJoin();
             }
             catch (Exception ex)
             {
@@ -121,9 +120,9 @@ namespace COAN
             return null;
         }
 
-        public void chatPublic(string msg)
+        public void ChatPublic(string msg)
         {
-            sendAdminChat(NetworkAction.NETWORK_ACTION_CHAT, DestType.DESTTYPE_BROADCAST, 0, msg, 0);
+            SendAdminChat(NetworkAction.NETWORK_ACTION_CHAT, DestType.DESTTYPE_BROADCAST, 0, msg, 0);
         }
 
         public bool IsConnected
@@ -142,19 +141,20 @@ namespace COAN
                 mThread.Start();
         }
 
-        public void receive()
+        public void Receive()
         {
             try
             {
-                Packet p = NetworkInputThread.getNext(getSocket());
-                delegatePacket(p);
+                Packet p = NetworkInputThread.getNext(socket);
+                DelegatePacket(p);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                logger.Log(LogLevel.Error, string.Format("Receive: {0}", ex.Message));
             }
         }
 
-        public void delegatePacket(Packet p)
+        public void DelegatePacket(Packet p)
         {
             Type t = this.GetType();
             string dispatchName = p.getType().getDispatchName();
@@ -174,74 +174,75 @@ namespace COAN
                 logger.Log(LogLevel.Error, string.Format("Method: {0}", dispatchName));
             }
             catch (Exception)
-            { 
+            {
+                logger.Log(LogLevel.Error, string.Format("DelegatePacket: {0} - Exception", dispatchName));
             }
         }
 
 #region Polls
-        public void pollCmdNames()
+        public void PollCmdNames()
         {
             logger.Log(LogLevel.Trace, "pollCmdNames");
-            sendAdminPoll(AdminUpdateType.ADMIN_UPDATE_CMD_NAMES);
+            SendAdminPoll(AdminUpdateType.ADMIN_UPDATE_CMD_NAMES);
         }
 
         /// <summary>
         /// Poll for information on a client if clientId is passed
         /// </summary>
         /// <param name="clientId">Optional parameter specifying the Client ID to get info on</param>
-        public void pollClientInfos(long clientId = long.MaxValue)
+        public void PollClientInfos(long clientId = long.MaxValue)
         {
             logger.Log(LogLevel.Trace, "pollClientInfos");
-            sendAdminPoll(AdminUpdateType.ADMIN_UPDATE_CLIENT_INFO, clientId);
+            SendAdminPoll(AdminUpdateType.ADMIN_UPDATE_CLIENT_INFO, clientId);
         }
 
         /// <summary>
         /// Poll for information on a company if companyId is passed
         /// </summary>
         /// <param name="companyId">Optional parameter specifying the Company ID to get info on</param>
-        public void pollCompanyInfos(long companyId = long.MaxValue)
+        public void PollCompanyInfos(long companyId = long.MaxValue)
         {
             logger.Log(LogLevel.Trace, "pollCompanyInfos");
-            sendAdminPoll(AdminUpdateType.ADMIN_UPDATE_CLIENT_INFO, companyId);
+            SendAdminPoll(AdminUpdateType.ADMIN_UPDATE_CLIENT_INFO, companyId);
         }
 
-        public void pollCompanyStats()
+        public void PollCompanyStats()
         {
             logger.Log(LogLevel.Trace, "pollCompanyStats");
-            sendAdminPoll(AdminUpdateType.ADMIN_UPDATE_COMPANY_STATS);
+            SendAdminPoll(AdminUpdateType.ADMIN_UPDATE_COMPANY_STATS);
         }
 
-        public void pollCompanyEconomy()
+        public void PollCompanyEconomy()
         {
             logger.Log(LogLevel.Trace, "pollCompanyEconomy");
-            sendAdminPoll(AdminUpdateType.ADMIN_UPDATE_COMPANY_ECONOMY);
+            SendAdminPoll(AdminUpdateType.ADMIN_UPDATE_COMPANY_ECONOMY);
         }
 
-        public void pollDate()
+        public void PollDate()
         {
             logger.Log(LogLevel.Trace, "pollDate");
-            sendAdminPoll(AdminUpdateType.ADMIN_UPDATE_DATE);
+            SendAdminPoll(AdminUpdateType.ADMIN_UPDATE_DATE);
         }
 #endregion
 
 #region Send Packets
 
-        public void sendAdminJoin()
+        public void SendAdminJoin()
         {
             logger.Log(LogLevel.Trace, string.Format("sendAdminJoin - adminPassword: {0} | botName: {1} | botVersion: {2}", adminPassword, botName, botVersion));
-            Packet p = new Packet(getSocket(), PacketType.ADMIN_PACKET_ADMIN_JOIN);
+            Packet p = new Packet(socket, PacketType.ADMIN_PACKET_ADMIN_JOIN);
 
             p.WriteString(adminPassword);
             p.WriteString(botName);
             p.WriteString(botVersion);
 
-            NetworkOutputThread.append(p);
+            NetworkOutputThread.Append(p);
         }
 
-        public void sendAdminChat(NetworkAction action, DestType type, long dest, String msg, long data)
+        public void SendAdminChat(NetworkAction action, DestType type, long dest, String msg, long data)
         {
             logger.Log(LogLevel.Trace, "sendAdminChat");
-            Packet p = new Packet(getSocket(), PacketType.ADMIN_PACKET_ADMIN_CHAT);
+            Packet p = new Packet(socket, PacketType.ADMIN_PACKET_ADMIN_CHAT);
             p.writeUint8((short)action);
             p.writeUint8((short)type);
             p.writeUint32(dest);
@@ -251,47 +252,47 @@ namespace COAN
             p.WriteString(msg);
 
             p.writeUint64(data);
-            NetworkOutputThread.append(p);
+            NetworkOutputThread.Append(p);
         }
 
-        public void sendAdminGameScript(string command)
+        public void SendAdminGameScript(string command)
         {
             logger.Log(LogLevel.Trace, string.Format("sendAdminGameScript - command: {0}", command));
-            Packet p = new Packet(getSocket(), PacketType.ADMIN_PACKET_ADMIN_GAMESCRIPT);
+            Packet p = new Packet(socket, PacketType.ADMIN_PACKET_ADMIN_GAMESCRIPT);
             p.WriteString(command); // JSON encode
-            NetworkOutputThread.append(p);
+            NetworkOutputThread.Append(p);
         }
 
-        public void sendAdminUpdateFrequency(AdminUpdateType type, AdminUpdateFrequency freq)
+        public void SendAdminUpdateFrequency(AdminUpdateType type, AdminUpdateFrequency freq)
         {
             logger.Log(LogLevel.Trace, "sendAdminUpdateFrequency");
-            if (getProtocol().isSupported(type, freq) == false)
+            if (protocol.isSupported(type, freq) == false)
                 throw new ArgumentException("The server does not support " + freq + " for " + type);
 
-            Packet p = new Packet(getSocket(), PacketType.ADMIN_PACKET_ADMIN_UPDATE_FREQUENCY);
+            Packet p = new Packet(socket, PacketType.ADMIN_PACKET_ADMIN_UPDATE_FREQUENCY);
             p.writeUint16((int)type);
             p.writeUint16((int)freq);
 
-            NetworkOutputThread.append(p);
+            NetworkOutputThread.Append(p);
         }
 
-        public void sendAdminPoll(AdminUpdateType type, long data = 0)
+        public void SendAdminPoll(AdminUpdateType type, long data = 0)
         {
             logger.Log(LogLevel.Trace, "AdminUpdateType");
-            if (getProtocol().isSupported(type, AdminUpdateFrequency.ADMIN_FREQUENCY_POLL) == false)
+            if (protocol.isSupported(type, AdminUpdateFrequency.ADMIN_FREQUENCY_POLL) == false)
                 throw new ArgumentException("The server does not support polling for " + type);
 
-            Packet p = new Packet(getSocket(), PacketType.ADMIN_PACKET_ADMIN_POLL);
+            Packet p = new Packet(socket, PacketType.ADMIN_PACKET_ADMIN_POLL);
             p.writeUint8((short)type);
             p.writeUint32(data);
 
-            NetworkOutputThread.append(p);
+            NetworkOutputThread.Append(p);
         }
 
         #endregion
 
         #region Receive Packets
-        public void receiveServerClientInfo(Packet p)
+        public void ReceiveServerClientInfo(Packet p)
         {
             logger.Log(LogLevel.Trace, "receiveServerClientInfo");
             Client client = new Client(p.readUint32())
@@ -310,11 +311,10 @@ namespace COAN
             OnClientInfo?.Invoke(client);
         }
 
-        public void receiveServerProtocol(Packet p)
+        public void ReceiveServerProtocol(Packet p)
         {
             logger.Log(LogLevel.Trace, "receiveServerProtocol");
-            Protocol protocol = getProtocol();
-
+            Protocol protocol = this.protocol;
             protocol.version = p.readUint8();
 
             while (p.readBool())
@@ -336,7 +336,7 @@ namespace COAN
             OnProtocol?.Invoke(protocol);
         }
 
-        public void receiveServerWelcome(Packet p)
+        public void ReceiveServerWelcome(Packet p)
         {
             logger.Log(LogLevel.Trace, "receiveServerWelcome");
             Map map = new Map
@@ -361,7 +361,7 @@ namespace COAN
 
         }
 
-        public void receiveServerChat(Packet p)
+        public void ReceiveServerChat(Packet p)
         {
             logger.Log(LogLevel.Trace, "receiveServerChat");
             NetworkAction action = (NetworkAction) p.readUint8();
@@ -374,7 +374,7 @@ namespace COAN
 
         }
 
-        public void receiveServerCmdNames(Packet p)
+        public void ReceiveServerCmdNames(Packet p)
         {
             logger.Log(LogLevel.Trace, "receiveServerCmdNames");
             while (p.readBool())
@@ -386,23 +386,10 @@ namespace COAN
             }
         }
 
-        public void receiveServerCmdLogging(Packet p)
+        public void ReceiveServerCmdLogging(Packet p)
         {
             logger.Log(LogLevel.Trace, "receiveServerCmdLogging");
         }
 #endregion
-
-#region Getters
-        public Socket getSocket()
-        {
-            return this.socket;
-        }
-
-        public Protocol getProtocol()
-        {
-            return this.protocol;
-        }
-#endregion
-
     }
 }

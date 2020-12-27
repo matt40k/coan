@@ -14,7 +14,7 @@ namespace COAN
         static NetworkInputThread()
         {
            queues = new ConcurrentDictionary<Socket, BlockingCollection<Packet>>();
-           System.Threading.Thread t = new System.Threading.Thread(run);
+           System.Threading.Thread t = new System.Threading.Thread(Run);
            t.IsBackground = true;
            t.Start();
            }
@@ -37,12 +37,12 @@ namespace COAN
         * Append a packet to the appropriate queue.
         * @param p Packet to append to the queue.
         */
-        public static void append(Packet p)
+        public static void Append(Packet p)
         {
             getQueue(p.getSocket()).Add(p);
         }
 
-        public static void run()
+        public static void Run()
         {
             while (true)
             {
@@ -50,7 +50,7 @@ namespace COAN
                 {
                     try
                     {
-                        if (socket.Connected == false)
+                        if (!socket.Connected)
                         {
                             queues.TryRemove(socket, out _);
                             logger.Log(LogLevel.Trace, string.Format("Socket closed: "));
@@ -58,7 +58,7 @@ namespace COAN
                         }
 
                         Packet p = new Packet(socket);
-                        append(p);
+                        Append(p);
                         logger.Log(LogLevel.Trace, string.Format("Received Packet: {0}", p.getType()));
                     }
                     catch (Exception ex)
@@ -69,5 +69,5 @@ namespace COAN
             }
         }
 
-    } // END CLASSc
+    } // END CLASS
 }
